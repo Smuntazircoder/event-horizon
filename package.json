@@ -1,0 +1,1 @@
+{"name":"event-horizon","private":true,"workspaces":["frontend","backend","shared"],"scripts":{"dev":"concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"","build":"npm run build -w backend && npm run build -w frontend","db:generate":"npm run prisma:generate -w backend","db:seed":"npm run prisma:seed -w backend"},"devDependencies":{"concurrently":"^9.1.2"}}
