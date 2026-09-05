@@ -1,0 +1,11 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+enum Role { USER ORGANIZER ADMIN }
+enum EventStatus { DRAFT PENDING APPROVED REJECTED }
+model User { id String @id @default(cuid()) email String @unique passwordHash String name String role Role @default(USER) city String? latitude Float? longitude Float? bookmarks Bookmark[] registrations Registration[] notifications Notification[] createdEvents Event[] @relation("OrganizerEvents") createdAt DateTime @default(now()) updatedAt DateTime @updatedAt }
+model Category { id String @id @default(cuid()) name String @unique slug String @unique events Event[] }
+model Venue { id String @id @default(cuid()) name String address String city String latitude Float longitude Float events Event[] }
+model Event { id String @id @default(cuid()) title String slug String @unique description String posterUrl String? startAt DateTime endAt DateTime venueId String? venue Venue? @relation(fields:[venueId],references:[id]) onlineUrl String? price Int @default(0) capacity Int status EventStatus @default(PENDING) categoryId String category Category @relation(fields:[categoryId],references:[id]) organizerId String organizer User @relation("OrganizerEvents",fields:[organizerId],references:[id]) tags String[] registrations Registration[] bookmarks Bookmark[] createdAt DateTime @default(now()) updatedAt DateTime @updatedAt @@index([startAt,status]) @@index([categoryId]) }
+model Registration { id String @id @default(cuid()) userId String eventId String user User @relation(fields:[userId],references:[id]) event Event @relation(fields:[eventId],references:[id]) createdAt DateTime @default(now()) @@unique([userId,eventId]) }
+model Bookmark { userId String eventId String user User @relation(fields:[userId],references:[id]) event Event @relation(fields:[eventId],references:[id]) createdAt DateTime @default(now()) @@id([userId,eventId]) }
+model Notification { id String @id @default(cuid()) userId String title String body String read Boolean @default(false) user User @relation(fields:[userId],references:[id]) createdAt DateTime @default(now()) }
