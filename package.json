@@ -3,3 +3,4 @@
 "build": "tsc",
 "start": "node dist/index.js",
 "prisma:seed": "tsx seed.ts"
+"prisma": { "seed": "tsx seed.ts", "schema": "schema.prisma" }
